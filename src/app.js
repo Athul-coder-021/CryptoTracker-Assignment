@@ -4,6 +4,7 @@ import { fetchCryptoData } from "./controllers/cryptoRequest.controller.js"
 import { Crypto } from "./models/cryptoData.model.js"
 import cron from "node-cron";
 import statsRouter from "./routes/stats.routes.js";
+import deviationRouter from "./routes/deviation.routes.js";
 
 const app = express()
 
@@ -60,6 +61,13 @@ cron.schedule("0 */2 * * *", updateCryptoData);
 
 // Use the stats route
 app.use("/stats", statsRouter);
+
+// --------------------------------------------------------------------------------------------
+
+// -------------------------------- TASK - 3 -------------------------------------------------
+
+// Use the deviation route
+app.use("/deviation", deviationRouter);
 
 // --------------------------------------------------------------------------------------------
 
