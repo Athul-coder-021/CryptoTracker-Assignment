@@ -3,6 +3,7 @@ import cors from "cors"
 import { fetchCryptoData } from "./controllers/cryptoRequest.controller.js"
 import { Crypto } from "./models/cryptoData.model.js"
 import cron from "node-cron";
+import statsRouter from "./routes/stats.routes.js";
 
 const app = express()
 
@@ -14,13 +15,16 @@ app.use(cors({
 app.use(express.json({ limit: "16kb" }))
 app.use(express.urlencoded({ extended: true, limit: "16kb" }))
 
+
+// --------------------------------  TASK - 1 ---------------------------------------------
+
 // Background job to fetch and save data
 const updateCryptoData = async () => {
     try {
         console.log("Fetching crypto data...");
         const data = await fetchCryptoData();
 
-        // Save data to MongoDB
+        // Saving data to MongoDB
         for (const [coinId, details] of Object.entries(data)) {
             const record = {
                 coinId,
@@ -49,5 +53,14 @@ cron.schedule("0 */2 * * *", updateCryptoData);
     console.log("Fetching data on server start...");
     await updateCryptoData();
 })();
+
+// --------------------------------------------------------------------------------------------
+
+// -------------------------------- TASK - 2 -------------------------------------------------
+
+// Use the stats route
+app.use("/stats", statsRouter);
+
+// --------------------------------------------------------------------------------------------
 
 export { app }
